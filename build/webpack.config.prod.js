@@ -7,6 +7,7 @@ module.exports = WebpackMerge({
   output: {
     filename: 'js/[name]_[contenthash].js', //入口文件名称
     chunkFilename: 'js/[name]_[contenthash].chunk.js' //非入口文件名称
+    // publicPath: '/' //通常是CDN地址
   },
   module: {
     rules: [{
@@ -25,6 +26,20 @@ module.exports = WebpackMerge({
           loader: 'css-loader',
           options: {
             importLoaders: 2 //该方式可以让@import引入的css文件再次执行一遍css打包loader
+          }
+        },{
+          loader: 'postcss-loader',
+          options:{
+            plugins: function(){
+              return [
+                require('autoprefixer')({
+                  "overrideBrowserslist":[
+                    ">0.25%",
+                    "not dead"
+                  ]
+                })
+              ]
+            }
           }
         },
         'less-loader'
@@ -68,5 +83,6 @@ module.exports = WebpackMerge({
       }
     },
     usedExports: true
-  }
+  },
+  devtool: 'source-map',
 }, base);
